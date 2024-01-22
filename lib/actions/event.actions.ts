@@ -1,6 +1,6 @@
 "use server";
 
-import { CreateEventParams } from "@/types";
+import { CreateEventParams, GetAllEventsParams } from "@/types";
 import { handleError } from "../utils";
 import { connectToDatabase } from "../database";
 import User from "../database/models/user.model";
@@ -40,6 +40,28 @@ export async function getEventById(eventId: string) {
     if(!event) throw new Error("Event not found!!!")
 
     return JSON.parse(JSON.stringify(event));
+  } catch (error) {
+    handleError(error)
+  }
+}
+
+export async function getAllEvents({ query, limit = 6, page, category }: GetAllEventsParams) {
+  try {
+    await connectToDatabase();
+
+    const conditions = {};
+    const eventQuery = Event.find(conditions)
+      .sort({ createdAt: 'desc'})
+      .skip(0)
+      .limit(limit);
+    
+    const events = await populateEvent(eventQuery)
+    const eventsCount = await Event.countDocuments(conditions)
+
+    return {
+      data: JSON.parse(JSON.stringify(events)),
+      totalPages: Math.ceil(eventsCount / limit)
+    }
   } catch (error) {
     handleError(error)
   }
