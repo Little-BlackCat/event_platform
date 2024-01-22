@@ -31,7 +31,7 @@ export default function DeleteComfirmation({ eventId }: { eventId: string }) {
         />
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="bg-white">
+      <AlertDialogContent className="bg-white rounded-xl">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
           <AlertDialogDescription className="p-regular-16 text-grey-600">
